@@ -1,22 +1,41 @@
 # Skatteverket Tax Assistant (`k4-assistant`)
 
-A specialized web application built with Streamlit that assists Swedish taxpayers in calculating, formatting, and filling out their Swedish tax declarations (Skatteverket) for the 2025 tax year.
+A comprehensive, specialized web application built with Streamlit to assist Swedish taxpayers in managing, calculating, and preparing their annual tax declarations for Skatteverket.
 
-## Features
-- **Skatteverket Design System**: Styled with official red branding (`#E30613`), high-contrast UI cards, and official tax box formatting.
-- **Multi-Form Guidance**: Questionnaire workflow to route users to the correct tax forms (**K4** for stocks/funds/crypto, **K5/K6** for property sales, and **K3** for rental income).
-- **K4 Official Form Mirror**: Line-by-line itemization matching Skatteverket's official Section A paper and digital forms (Rows 1–9 with exact column layouts for Antal, Beteckning, Försäljningspris, Omkostnadsbelopp, Vinst, and Förlust).
-- **Cost Basis Calculator Helper**: Interactive average cost calculation tool (*genomsnittsmetoden*) with color-coded buy/sell transaction cards that automatically export computed results per ticker symbol directly to the K4 form.
+## 🚀 What can you do with this app?
+This tool simplifies complex Swedish tax reporting by guiding you through your declaration with a formal interface that matches official branding.
+- **K4 (Stocks, Funds, Crypto)**: Line-by-line itemization for all asset sales.
+- **Cost Basis Helper**: Calculates complex average cost basis (*genomsnittsmetoden*) based on historical buy/sell events and automatically exports data to K4.
+- **K5/K6 (Property Sales)**: Computes gains/losses for house and apartment sales.
+- **K3 (Rental Income)**: Automatically applies standard and property-specific deductions.
+- **Multi-Year Management**: Manage declarations across multiple tax years (2022–2026) in one dashboard.
+- **Export Totals**: Generates official summary values formatted exactly for Skatteverket's e-service boxes.
 
-## Running Locally
+## 🛠️ Getting Started
 
-1. Install dependencies using `uv`:
+### Prerequisites
+- [Install UV](https://docs.astral.sh/uv/getting-started/installation/)
+
+### Installation
+1. **Clone the repository**:
+   ```bash
+   git clone <YOUR_REPO_URL>
+   cd k4-assistant
+   ```
+2. **Install dependencies**:
    ```bash
    uv sync
    ```
-2. Run the Streamlit application:
+3. **Run the application**:
    ```bash
    uv run streamlit run src/app.py --server.port 8501
    ```
-3. Open your browser at:
-   [`http://localhost:8501`](http://localhost:8501)
+4. **Open in browser**:
+   Navigate to [`http://localhost:8501`](http://localhost:8501)
+
+## 📖 How to use
+1. **Sign In**: Log in (mock) to save your portfolio holdings and tax declarations to your profile.
+2. **Select Tax Year**: Choose the declaration year (e.g., 2025) from the sidebar.
+3. **Questionnaire**: Check the boxes for the tax activities performed during that year (e.g., "Sold stocks", "Rented out property").
+4. **Enter Data**: Fill out individual asset sales (K4) or transaction histories (Cost Basis Helper).
+5. **Generate Summary**: View the official "Skatteverket Mirror" table to easily transfer the required box values to your official Skatteverket tax return.
