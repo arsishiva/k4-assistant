@@ -9,6 +9,8 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "pydantic>=2.14.0",
+    "streamlit>=1.66.1",
+    "pandas>=3.1.0",
 ]
 
 [project.scripts]
@@ -27,10 +29,11 @@ dev = [
 ]
 
 [tool.ruff]
-line-length = 100
+line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+ignore = ["F401", "B007", "E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

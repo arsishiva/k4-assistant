@@ -50,8 +50,7 @@ def calculate_gains(trades: list[Trade]) -> list[RealizedGain]:
 
         if trade.quantity > position.quantity:
             raise CostBasisError(
-                f"Cannot sell {trade.quantity} {trade.symbol} on {trade.trade_date}: "
-                f"only {position.quantity} held"
+                f"Cannot sell {trade.quantity} {trade.symbol} on {trade.trade_date}: only {position.quantity} held"
             )
 
         cost_basis = position.total_cost * trade.quantity / position.quantity
