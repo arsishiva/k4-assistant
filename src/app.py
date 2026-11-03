@@ -13,10 +13,15 @@ try:
 except ImportError:
     pass
 
-# --- Skatteverket Design System ---
-SKATTEVERKET_RED = "#E30613"
-SKATTEVERKET_GRAY = "#F5F5F5"
-SKATTEVERKET_DARK = "#333333"
+# --- Skatteverket Official Design Tokens & Brand Colors ---
+SKV_DEEP_BLUE = "#003366"  # Primary Brand Blue (Djupblå)
+SKV_GOLD_YELLOW = "#FFCC00"  # Accent Yellow (Guldgul)
+SKV_INTERACTIVE_BLUE = "#0055A5"  # Link & Button Interactive Blue
+SKV_TEXT_DARK = "#222222"  # Accessible Dark Text
+SKV_BG_LIGHT = "#F4F5F7"  # Neutral Light Background
+SKV_CARD_BORDER = "#E0E0E0"  # Container border
+SKV_SUCCESS_GREEN = "#1E7E34"  # Success Green
+SKV_ERROR_RED = "#D9381E"  # Error Red
 
 st.set_page_config(
     page_title="Skatteverket Tax Assistant",
@@ -24,71 +29,88 @@ st.set_page_config(
     layout="wide",
 )
 
-# Custom CSS for Skatteverket Look & Feel & Form Tables
+# Custom CSS for Skatteverket Official Web Design System
 st.markdown(
     f"""
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+    
+    html, body, [class*="css"] {{
+        font-family: "Frutiger", "Helvetica Neue", Arial, "Open Sans", sans-serif;
+        color: {SKV_TEXT_DARK};
+        font-size: 16px;
+        line-height: 1.5;
+    }}
     .main {{
-        background-color: white;
+        background-color: {SKV_BG_LIGHT};
     }}
     .stButton>button {{
-        background-color: {SKATTEVERKET_RED};
+        background-color: {SKV_DEEP_BLUE};
         color: white;
-        border-radius: 0px;
+        border-radius: 4px;
         border: none;
-        padding: 0.5rem 2rem;
-        font-weight: bold;
+        padding: 0.6rem 2rem;
+        font-weight: 600;
+        font-size: 15px;
+        transition: background-color 0.2s ease-in-out;
     }}
     .stButton>button:hover {{
-        background-color: #b3050f;
+        background-color: {SKV_INTERACTIVE_BLUE};
         color: white;
     }}
     .header-bar {{
-        background-color: {SKATTEVERKET_RED};
-        padding: 1rem;
+        background-color: {SKV_DEEP_BLUE};
+        border-bottom: 4px solid {SKV_GOLD_YELLOW};
+        padding: 1.2rem 2rem;
         color: white;
-        font-size: 24px;
-        font-weight: bold;
+        font-size: 26px;
+        font-weight: 700;
         margin-bottom: 2rem;
         display: flex;
         align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }}
     .header-logo {{
-        font-size: 30px;
+        font-size: 32px;
         margin-right: 15px;
     }}
     .card {{
-        background-color: {SKATTEVERKET_GRAY};
+        background-color: white;
         padding: 2rem;
-        border-radius: 4px;
-        border-left: 5px solid {SKATTEVERKET_RED};
-        margin-bottom: 1rem;
+        border-radius: 6px;
+        border: 1px solid {SKV_CARD_BORDER};
+        border-top: 4px solid {SKV_DEEP_BLUE};
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }}
     .buy-card {{
         background-color: #e6f4ea;
         padding: 1rem;
-        border-left: 4px solid #34a853;
+        border-left: 5px solid {SKV_SUCCESS_GREEN};
         margin-bottom: 0.5rem;
         border-radius: 4px;
     }}
     .sell-card {{
         background-color: #fce8e6;
         padding: 1rem;
-        border-left: 4px solid #ea4335;
+        border-left: 5px solid {SKV_ERROR_RED};
         margin-bottom: 0.5rem;
         border-radius: 4px;
     }}
     .form-box {{
-        background-color: #ffffcc;
-        padding: 2px 10px;
-        border: 1px solid #ccc;
+        background-color: #FFFFCC;
+        padding: 4px 12px;
+        border: 1px solid #CCCCCC;
         font-family: monospace;
         font-weight: bold;
+        font-size: 15px;
         display: inline-block;
         text-align: right;
+        border-radius: 2px;
     }}
-    h1, h2, h3 {{
-        color: {SKATTEVERKET_DARK};
+    h1, h2, h3, h4 {{
+        color: {SKV_DEEP_BLUE};
+        font-weight: 700;
     }}
     </style>
     <div class="header-bar">
@@ -254,13 +276,7 @@ elif st.session_state.step == "cost_basis_helper":
 
     if st.button("Add Transaction"):
         st.session_state.helper_trades.append(
-            {
-                "symbol": h_symbol.upper(),
-                "type": t_type,
-                "qty": t_qty,
-                "price": t_price,
-                "fee": t_fee,
-            }
+            {"symbol": h_symbol.upper(), "type": t_type, "qty": t_qty, "price": t_price, "fee": t_fee}
         )
         st.success(f"Added {t_type} transaction for {h_symbol.upper()}.")
 
@@ -268,7 +284,7 @@ elif st.session_state.step == "cost_basis_helper":
 
     if st.session_state.helper_trades:
         st.subheader("Recorded Transactions (Color-coded)")
-        for idx, tr in enumerate(st.session_state.helper_trades):
+        for tr in st.session_state.helper_trades:
             card_class = "buy-card" if tr["type"] == "BUY" else "sell-card"
             st.markdown(
                 f"""
@@ -312,11 +328,14 @@ elif st.session_state.step == "cost_basis_helper":
                         )
 
             st.success("Calculated and exported individual ticker rows to K4 form!")
-            if st.button("Go back to K4 Form"):
-                go_to("k4")
 
-    if st.button("Back to K4 Without Exporting"):
-        go_to("k4")
+    c_nav1, c_nav2 = st.columns(2)
+    with c_nav1:
+        if st.button("Go back to K4 Form"):
+            go_to("k4")
+    with c_nav2:
+        if st.button("Back to K4 Without Exporting"):
+            go_to("k4")
 
 elif st.session_state.step == "k4_summary":
     st.title("K4 Form - Official Skatteverket Layout Mirror")
@@ -324,7 +343,6 @@ elif st.session_state.step == "k4_summary":
         "Below is the exact mirror of **A. Marknadsnoterade aktier, aktieindexobligationer, aktieoptioner m.m.** formatted cleanly in a table."
     )
 
-    # Prepare table data for cleaner Streamlit display
     table_data = []
     total_p = 0
     total_c = 0
@@ -369,11 +387,10 @@ elif st.session_state.step == "k4_summary":
     st.subheader("A. Marknadsnoterade aktier, aktieindexobligationer, aktieoptioner m.m.")
     st.dataframe(df_summary, width="stretch", hide_index=True)
 
-    # Summary totals matching user requirements
     st.markdown(
         f"""
     <div class="card" style="background-color: white; border: 1px solid #333;">
-        <h4 style="color: {SKATTEVERKET_RED};">Summering av bilaga K4</h4>
+        <h4 style="color: {SKV_DEEP_BLUE};">Summering av bilaga K4</h4>
         <table style="width: 100%; border-collapse: collapse;">
             <tr>
                 <td style="padding: 8px; border-bottom: 1px solid #ddd;"><b>Total Försäljningspris (Summan av alla försäljningar):</b></td>
